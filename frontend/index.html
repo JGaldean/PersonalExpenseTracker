@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Expense Tracker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f9fc;
+      margin: 0;
+      padding: 2rem;
+      max-width: 600px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    form {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      margin-bottom: 2rem;
+    }
+    input, button {
+      display: block;
+      width: 100%;
+      margin-top: 10px;
+      padding: 0.7rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    ul#expense-list {
+      list-style: none;
+      padding: 0;
+    }
+    .expense-item {
+      background: #fff;
+      border-left: 4px solid #007bff;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border-radius: 6px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.05);
+    }
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .actions button {
+      flex: 1;
+    }
+    .delete {
+      background-color: #dc3545;
+    }
+    .edit {
+      background-color: #ffc107;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>Expense Tracker</h1>
+
+  <form id="expense-form">
+    <input type="date" name="date" required />
+    <input type="number" name="amount" placeholder="Amount" required />
+    <input type="text" name="category" placeholder="Category" required />
+    <input type="text" name="description" placeholder="Description" required />
+    <button type="submit">Add Expense</button>
+  </form>
+
+  <ul id="expense-list"></ul>
+
+  <div style="text-align: right;">
+    <a id="loginBtn" href="#">Login</a>
+    <a id="logoutBtn" href="#" style="display: none;">Logout</a>
+  </div>
+
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Backend for personal expense tracker",
+  "main": "createExpense.js",
+  "type": "commonjs",
+  "dependencies": {
+    "aws-sdk": "^2.1481.0",
+    "uuid": "^9.0.1"
+  }
+}

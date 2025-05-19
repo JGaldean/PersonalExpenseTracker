@@ -1,0 +1,106 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Expense Tracker API
+
+Globals:
+  Function:
+    Runtime: nodejs18.x
+    Timeout: 10
+
+Resources:
+  ExpenseApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: ExpenseTrackerApi
+      StageName: Prod
+      Cors:
+        AllowMethods: "'OPTIONS,POST,GET,PUT,DELETE'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+        AllowOrigin: "'*'"
+
+  CreateExpenseFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: backend/
+      Handler: createExpense.handler
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          TABLE_NAME: ExpenseTrackerFinal
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /expenses
+            Method: POST
+            RestApiId: !Ref ExpenseApi
+
+  GetExpensesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: backend/
+      Handler: getExpense.handler
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          TABLE_NAME: ExpenseTrackerFinal
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /expenses
+            Method: GET
+            RestApiId: !Ref ExpenseApi
+
+  UpdateExpenseFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: backend/
+      Handler: updateExpense.handler
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          TABLE_NAME: ExpenseTrackerFinal
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /expenses/{id}
+            Method: PUT
+            RestApiId: !Ref ExpenseApi
+
+  DeleteExpenseFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: backend/
+      Handler: deleteExpense.handler
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          TABLE_NAME: ExpenseTrackerFinal
+      Events:
+        DeleteExpense:
+          Type: Api
+          Properties:
+            Path: /expenses/{id}
+            Method: DELETE
+
+  ExpenseTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ExpenseTrackerFinal
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: userId
+          AttributeType: S
+        - AttributeName: expenseId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: userId
+          KeyType: HASH
+        - AttributeName: expenseId
+          KeyType: RANGE
