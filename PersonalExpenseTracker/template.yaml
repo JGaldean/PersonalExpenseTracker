@@ -1,0 +1,52 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Personal Expense Tracker App
+
+Globals:
+  Function:
+    Runtime: nodejs18.x
+    Timeout: 10
+    MemorySize: 128
+
+Resources:
+  CreateExpenseFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: CreateExpenseFunction
+      CodeUri: backend/
+      Handler: createExpense.handler
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          TABLE_NAME: ExpenseTracker
+      Events:
+        CreateExpenseAPI:
+          Type: Api
+          Properties:
+            Path: /expenses
+            Method: POST
+
+  ExpenseTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ExpenseTracker
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: userId
+          AttributeType: S
+        - AttributeName: expenseId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: userId
+          KeyType: HASH
+        - AttributeName: expenseId
+          KeyType: RANGE
+
+Outputs:
+  CreateExpenseAPI:
+    Description: "API Gateway endpoint URL for CreateExpenseFunction"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/expenses"
+  CreateExpenseFunctionArn:
+    Description: "ARN of CreateExpenseFunction"
+    Value: !GetAtt CreateExpenseFunction.Arn
